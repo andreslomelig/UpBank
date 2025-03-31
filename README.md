@@ -19,7 +19,7 @@ Welcome to **UP Bank**, a web-based simulation of a modern digital bank. This pr
 - **Responsive Design**  
   Fully responsive and optimized for desktop devices.
 
-## 🛠️ Tech Stack
+## Tech Stack
   - To be defined
 
 ## Installation
