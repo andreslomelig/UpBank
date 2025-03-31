@@ -26,5 +26,5 @@ Welcome to **UP Bank**, a web-based simulation of a modern digital bank. This pr
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/up-bank.git
-cd up-bank
+git clone https://github.com/andreslomelig/UpBank.git
+cd UpBank
