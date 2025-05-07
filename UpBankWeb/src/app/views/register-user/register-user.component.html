@@ -1,0 +1,46 @@
+<div class="login-container">
+    <div class="part-container logo-container">
+        <img src="assets/logoup.png" alt="Up">
+    </div>
+    <div class="part-container right-container">
+        <div class="form-container">
+            <div class="title-container">
+                <span class="s1">UP</span>
+                <span class="s2">Bank</span>
+            </div>
+            <form [formGroup]="form">  
+                <app-input
+                    [label]="'First Name'"
+                    [type]="'text'"
+                    formControlName="firstName"
+                />
+                <app-input
+                    [label]="'Last Name'"
+                    [type]="'text'"
+                    formControlName="lastName"
+                />
+                <app-input
+                    [label]="'Email'"
+                    [type]="'text'"
+                    formControlName="userName"
+                />
+                <app-input
+                    [label]="'Password'"
+                    [type]="'password'"
+                    formControlName="password"
+                />
+            </form>
+            <div class="register-link">
+                <a>Have an account? </a>
+                <a class="link" routerLink="/login">Log in</a>
+            </div>
+            <div class="button-container">
+                <app-button
+                    [text]="'Register'"
+                    [status]="form.valid ? 'active' : 'inactive'"
+                    (action)="register()"
+                />
+            </div>
+        </div>
+    </div>
+</div>
