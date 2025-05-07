@@ -28,3 +28,14 @@ Welcome to **UP Bank**, a web-based simulation of a modern digital bank. This pr
 # Clone the repository
 git clone https://github.com/andreslomelig/UpBank.git
 cd UpBank
+
+```
+## Run locally
+```bash
+# Install the requirements
+pip install -r requirements.txt
+
+# Run the app
+pyton app.py
+```
+After executing this, open http://127.0.0.1:5000 on your browser to see the website.
