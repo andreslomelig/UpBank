@@ -36,6 +36,6 @@ cd UpBank
 pip install -r requirements.txt
 
 # Run the app
-pyton app.py
+python app.py
 ```
 After executing this, open http://127.0.0.1:5000 on your browser to see the website.
