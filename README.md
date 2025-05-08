@@ -21,6 +21,7 @@ Welcome to **UP Bank**, a web-based simulation of a modern digital bank. This pr
 
 ## Tech Stack
 - This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.10.
+- Also Node.js was used. Download and install it from https://nodejs.org/en
 
 ## Installation
 
