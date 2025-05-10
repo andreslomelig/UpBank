@@ -24,12 +24,18 @@ $light-gold: #F5F0E6;
 
     img {
         width: 80%;
-        height: auto;
+        height: 80%;
     }
 }
 
 .right-container {
     background-color: $red;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
 }
 
 .form-container {
