@@ -1,0 +1,45 @@
+$grey: #7d7d831a;
+$red: #992828;
+$gold: #c8a977;
+$blue: #002d75;
+$white: #ffffff;
+
+.input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-family: "Lexend", sans-serif;
+    color: $gold;
+    width: 250px;
+
+    .input-container {
+        border: 1px solid $gold;
+        border-radius: 10px;
+        border-width: 2px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        padding: 0px 10px;
+        position: relative;
+
+        input {
+            outline: none;
+            background: none;
+            border: 0;
+            padding: 10px;
+            font-family: "Lexend", sans-serif;
+            flex-grow: 1;
+            padding-right: 30px;
+        }
+
+        .icon {
+            position: absolute;
+            right: 10px;
+            cursor: pointer;
+        }
+    }
+}
+
+input[type="password"]::-ms-reveal {
+    display: none;
+}

@@ -1,0 +1,95 @@
+$grey: #7d7d831a;
+$red: #79332f;
+$gold: #c8a977;
+$blue: #002d75;
+$white: #ffffff;
+$light-gold: #F5F0E6;
+
+.login-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.part-container {
+    align-items: center;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.logo-container {
+    background-color: $light-gold;
+
+    img {
+        width: 80%;
+        height: auto;
+    }
+}
+
+.right-container {
+    background-color: $red;
+}
+
+.form-container {
+    border: 1px solid $gold;
+    background-color: $light-gold;
+    border-radius: 20px;
+    border-width: 2px;
+    display: flex;
+    gap: 30px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 35px 60px;
+
+    span {
+        font-family: "Lexend", sans-serif;
+        font-size: 50px;
+        font-weight: bold;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+.title-container {
+    width: 100%;
+    border: 1px solid $gold;
+    border-radius: 10px;
+    border-width: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.s1 {
+    color: $gold;
+}
+
+.s2 {
+    color: $red;
+}
+
+.button-container {
+    width: 100%;
+}
+
+.register-link {
+    font-family: "Lexend", sans-serif;
+    font-size: 14px;
+    text-align: right;
+    width: 100%;
+    color: $gold;
+    padding-right: 10px;
+
+    .link {
+        color: $red;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+}
