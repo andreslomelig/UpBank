@@ -1,0 +1,23 @@
+<div class="menu-container">
+  <app-header [user]="'Kevin Escobedo'"></app-header>
+
+  <div class="main-content">
+    <div class="table-container">
+      <div class="title-container">
+          <span class="s1">Users</span>
+      </div>
+      <div *ngFor="let user of users" class="table-row item-container">
+        <div class="name">
+          <div class="square"></div>
+          {{ user.text }}
+        </div>
+        <div class="toggle-switch">
+          <label class="switch">
+            <input type="checkbox" [(ngModel)]="user.status">
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

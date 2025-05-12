@@ -7,22 +7,55 @@ $light-gold: #F5F0E6;
 
 .header-container {
     background-color: $light-gold;
-    height: 5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 50px;
+    padding: 10px 60px;
     font-family: "Lexend", sans-serif;
+    height: 100%;
+    flex-shrink: 0;
+    position: relative;
 }
 
 .title-container {
     font-size: 50px;
     font-weight: bold;
-    .s1 {
-        color: $gold;
-    }
+    border: 1px solid $gold;
+    border-radius: 12px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
 
-    .s2 {
-        color: $red;
-    }
+.balance-container {
+    display: flex;
+    flex-direction: column;
+    font-size: 30px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: 1px solid $gold;
+}
+
+.user-container {
+    display: flex;
+    flex-direction: column;
+    font-size: 30px;
+    font-weight: bold;
+    border: 1px solid $gold;
+    border-radius: 12px;
+    padding: 10px 20px;
+}
+
+.s1 {
+    color: $gold;
+}
+
+.s2 {
+    color: $red;
+}
+
+.t1 {
+    font-size: 25px;
 }
