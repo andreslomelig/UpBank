@@ -1,0 +1,26 @@
+$grey: #7d7d831a;
+$red: #79332f;
+$gold: #c8a977;
+$blue: #002d75;
+$white: #ffffff;
+$light-gold: #F5F0E6;
+
+.item-container {
+    border: 1px solid $gold;
+    border-radius: 10px;
+    border-width: 2px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    position: relative;
+    flex-direction: row;
+    gap: 15px;
+}
+
+.square {
+  width: 12px;
+  height: 35px;
+  background-color: $red;
+  border-radius: 15px;
+}
