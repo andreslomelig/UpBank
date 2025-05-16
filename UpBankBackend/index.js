@@ -24,7 +24,8 @@ const db = new sqlite3.Database('./db/upbank.db', (err) => {
         password TEXT,
         money REAL,
         blocked INTEGER,
-        account_number TEXT UNIQUE
+        account_number TEXT UNIQUE,
+        login_attempts INTEGER DEFAULT 0
     )`, (err) => {
       if (err) return console.error('Table creation error:', err.message);
 
@@ -72,7 +73,7 @@ const db = new sqlite3.Database('./db/upbank.db', (err) => {
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
 
-  // Check admin first
+  // Check if it's an admin
   const adminQuery = 'SELECT * FROM admins WHERE email = ? AND password = ?';
   db.get(adminQuery, [email, password], (err, adminRow) => {
     if (err) return res.status(500).json({ error: 'Database error' });
@@ -84,29 +85,46 @@ app.post('/login', (req, res) => {
       });
     }
 
-    // If not admin, check if it's a valid user
-    const userExistsQuery = 'SELECT * FROM users WHERE email = ?';
-    db.get(userExistsQuery, [email], (err1, userRow) => {
+    // If not admin, check user
+    const userQuery = 'SELECT * FROM users WHERE email = ?';
+    db.get(userQuery, [email], (err1, userRow) => {
       if (err1) return res.status(500).json({ error: 'Database error' });
       if (!userRow) return res.status(401).json({ error: 'User does not exist' });
       if (userRow.blocked) return res.status(401).json({ error: 'Blocked account' });
 
-      const validUserQuery = 'SELECT * FROM users WHERE email = ? AND password = ?';
-      db.get(validUserQuery, [email, password], (err2, validUserRow) => {
-        if (err2) return res.status(500).json({ error: 'Database error' });
-
-        if (!validUserRow) {
-          return res.status(401).json({ error: 'Incorrect password' });
-        }
+      if (userRow.password === password) {
+        // Successful login, then reset attempts
+        db.run(`UPDATE users SET login_attempts = 0 WHERE email = ?`, [email], (err) => {
+          if (err) console.error('Failed to reset login attempts:', err.message);
+        });
 
         return res.json({
-          name: validUserRow.first_name + ' ' + validUserRow.last_name,
+          name: userRow.first_name + ' ' + userRow.last_name,
           role: 'user'
         });
-      });
+      } else {
+        // Incorrect password → increment login_attempts
+        let newAttempts = (userRow.login_attempts || 0) + 1;
+        let blockUser = newAttempts >= 3;
+
+        db.run(
+          `UPDATE users SET login_attempts = ?, blocked = ? WHERE email = ?`,
+          [newAttempts, blockUser ? 1 : 0, email],
+          (err) => {
+            if (err) return res.status(500).json({ error: 'Failed to update attempts' });
+
+            if (blockUser) {
+              return res.status(401).json({ error: 'Account blocked after 3 failed attempts' });
+            } else {
+              return res.status(401).json({ error: `Incorrect password. Attempt ${newAttempts}/3` });
+            }
+          }
+        );
+      }
     });
   });
 });
+
 
 // Getting all users for admin
 app.get('/all_users', (req, res) => {
