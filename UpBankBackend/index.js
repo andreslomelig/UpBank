@@ -38,6 +38,14 @@ const db = new sqlite3.Database('./db/users.db', (err) => {
                 else console.log('Dummy user inserted or already exists.');
         });
 
+        db.run(`INSERT OR IGNORE INTO users 
+            (first_name, last_name, email, password, money, blocked, account_number) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            ['Chuck', 'Norris', 'chuck@example.com', '4321', 1000.00, 1, '123456789012345688'], 
+            (err) => {
+                if (err) console.error('Insert error:', err.message);
+                else console.log('Dummy user inserted or already exists.');
+        });
     });
   }
 });
@@ -46,17 +54,32 @@ const db = new sqlite3.Database('./db/users.db', (err) => {
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
 
-  db.get(`SELECT * FROM users WHERE email = ? AND password = ?`, [email, password], (err, row) => {
+  const sql = 'SELECT * FROM users WHERE email = ? AND password = ?';
+  db.get(sql, [email, password], (err, row) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+    if (!row) return res.status(401).json({ error: 'Invalid credentials' });
+
+    res.json({
+      name: row.first_name + ' ' + row.last_name
+    });
+  });
+});
+
+// Getting all users for admin
+app.get('/users', (req, res) => {
+  const sql = `SELECT first_name, last_name, blocked FROM users`;
+
+  db.all(sql, [], (err, rows) => {
     if (err) {
-      console.error('Login query error:', err.message);
-      return res.status(500).json({ error: 'Internal DB error' });
+      return res.status(500).json({ error: 'Database error' });
     }
 
-    if (row) {
-      res.status(200).json({ message: 'Login successful' });
-    } else {
-      res.status(401).json({ message: 'Invalid credentials' });
-    }
+    const formattedUsers = rows.map(row => ({
+      text: `${row.first_name} ${row.last_name}`,
+      status: !row.blocked // true = active, false = blocked
+    }));
+
+    res.json(formattedUsers);
   });
 });
 
