@@ -10,13 +10,12 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Connect to SQLite database
-const db = new sqlite3.Database('./db/users.db', (err) => {
+const db = new sqlite3.Database('./db/upbank.db', (err) => {
   if (err) {
     console.error('Failed to connect to DB:', err.message);
   } else {
     console.log('Connected to SQLite DB.');
 
-    // Create table and insert dummy user AFTER DB is ready
     db.run(`CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         first_name TEXT,
@@ -25,7 +24,8 @@ const db = new sqlite3.Database('./db/users.db', (err) => {
         password TEXT,
         money REAL,
         blocked INTEGER,
-        account_number TEXT UNIQUE
+        account_number TEXT UNIQUE,
+        login_attempts INTEGER DEFAULT 0
     )`, (err) => {
       if (err) return console.error('Table creation error:', err.message);
 
@@ -38,6 +38,33 @@ const db = new sqlite3.Database('./db/users.db', (err) => {
                 else console.log('Dummy user inserted or already exists.');
         });
 
+        db.run(`INSERT OR IGNORE INTO users 
+            (first_name, last_name, email, password, money, blocked, account_number) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            ['Chuck', 'Norris', 'chuck@example.com', '4321', 1000.00, 1, '123456789012345688'], 
+            (err) => {
+                if (err) console.error('Insert error:', err.message);
+                else console.log('Dummy user inserted or already exists.');
+        });
+    });
+
+    db.run(`CREATE TABLE IF NOT EXISTS admins  (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        first_name TEXT,
+        last_name TEXT,
+        email TEXT UNIQUE,
+        password TEXTTEXT
+    )`, (err) => {
+      if (err) return console.error('Table creation error:', err.message);
+
+        db.run(`INSERT OR IGNORE INTO admins 
+            (first_name, last_name, email, password) 
+            VALUES (?, ?, ?, ?)`,
+            ['Adrian', 'Muro', 'amuro@example.com', 'qwerty'], 
+            (err) => {
+                if (err) console.error('Insert error:', err.message);
+                else console.log('Dummy admin inserted or already exists.');
+        });
     });
   }
 });
@@ -46,19 +73,93 @@ const db = new sqlite3.Database('./db/users.db', (err) => {
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
 
-  db.get(`SELECT * FROM users WHERE email = ? AND password = ?`, [email, password], (err, row) => {
-    if (err) {
-      console.error('Login query error:', err.message);
-      return res.status(500).json({ error: 'Internal DB error' });
+  // Check if it's an admin
+  const adminQuery = 'SELECT * FROM admins WHERE email = ? AND password = ?';
+  db.get(adminQuery, [email, password], (err, adminRow) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+
+    if (adminRow) {
+      return res.json({
+        name: adminRow.first_name + ' ' + adminRow.last_name,
+        role: 'admin'
+      });
     }
 
-    if (row) {
-      res.status(200).json({ message: 'Login successful' });
-    } else {
-      res.status(401).json({ message: 'Invalid credentials' });
-    }
+    // If not admin, check user
+    const userQuery = 'SELECT * FROM users WHERE email = ?';
+    db.get(userQuery, [email], (err1, userRow) => {
+      if (err1) return res.status(500).json({ error: 'Database error' });
+      if (!userRow) return res.status(401).json({ error: 'User does not exist' });
+      if (userRow.blocked) return res.status(401).json({ error: 'Blocked account' });
+
+      if (userRow.password === password) {
+        // Successful login, then reset attempts
+        db.run(`UPDATE users SET login_attempts = 0 WHERE email = ?`, [email], (err) => {
+          if (err) console.error('Failed to reset login attempts:', err.message);
+        });
+
+        return res.json({
+          name: userRow.first_name + ' ' + userRow.last_name,
+          role: 'user'
+        });
+      } else {
+        // Incorrect password , increment user attempts
+        let newAttempts = (userRow.login_attempts || 0) + 1;
+        let blockUser = newAttempts >= 3;
+
+        db.run(
+          `UPDATE users SET login_attempts = ?, blocked = ? WHERE email = ?`,
+          [newAttempts, blockUser ? 1 : 0, email],
+          (err) => {
+            if (err) return res.status(500).json({ error: 'Failed to update attempts' });
+
+            if (blockUser) {
+              return res.status(401).json({ error: 'Account blocked after 3 failed attempts' });
+            } else {
+              return res.status(401).json({ error: `Incorrect password. Attempt ${newAttempts}/3` });
+            }
+          }
+        );
+      }
+    });
   });
 });
+
+
+// Getting all users for admin
+app.get('/all_users', (req, res) => {
+  const sql = `SELECT first_name, last_name, blocked, email FROM users`;
+
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    const formattedUsers = rows.map(row => ({
+      text: `${row.first_name} ${row.last_name}`,
+      status: !row.blocked, // true = active, false = blocked
+      email: row.email
+    }));
+
+    res.json(formattedUsers);
+  });
+});
+
+// Update the user blocked status
+app.post('/update_user_blocked_status', (req, res) => {
+  const { email, blocked } = req.body;
+
+  const sql = `UPDATE users SET blocked = ? WHERE email = ?`;
+  db.run(sql, [blocked ? 0 : 1, email], function (err) {
+    
+    if (err) {
+      return res.status(500).json({ error: 'Failed to update user status' });
+    }
+
+    res.json({ success: true, updatedRows: this.changes });
+  });
+});
+
 
 // Start server
 app.listen(PORT, () => {
