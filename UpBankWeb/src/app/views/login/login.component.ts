@@ -29,7 +29,11 @@ export class LoginComponent {
         next: (res) => {
           localStorage.setItem('loggedInUser', res.name);
           Swal.fire({ title: 'Access Granted', icon: 'success' }).then(() => {
-            this.router.navigate(['menu-admin']);
+            if (res.role === 'admin') {
+              this.router.navigate(['menu-admin']);
+            } else {
+              this.router.navigate(['menu-user']); //TODO: Create menu-user view.
+            }
           });
         },
         error: () => {

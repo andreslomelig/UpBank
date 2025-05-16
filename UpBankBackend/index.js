@@ -72,16 +72,38 @@ const db = new sqlite3.Database('./db/upbank.db', (err) => {
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
 
-  const sql = 'SELECT * FROM admins WHERE email = ? AND password = ?';
-  db.get(sql, [email, password], (err, row) => {
+  // Check admin first
+  const adminQuery = 'SELECT * FROM admins WHERE email = ? AND password = ?';
+  db.get(adminQuery, [email, password], (err, adminRow) => {
     if (err) return res.status(500).json({ error: 'Database error' });
-    if (!row) return res.status(401).json({ error: 'Invalid credentials' });
-    if (row.blocked){ // if the account is blocked.
-      return res.status(401).json({ error: 'Blocked account' });
+
+    if (adminRow) {
+      return res.json({
+        name: adminRow.first_name + ' ' + adminRow.last_name,
+        role: 'admin'
+      });
     }
 
-    res.json({
-      name: row.first_name + ' ' + row.last_name
+    // If not admin, check if it's a valid user
+    const userExistsQuery = 'SELECT * FROM users WHERE email = ?';
+    db.get(userExistsQuery, [email], (err1, userRow) => {
+      if (err1) return res.status(500).json({ error: 'Database error' });
+      if (!userRow) return res.status(401).json({ error: 'User does not exist' });
+      if (userRow.blocked) return res.status(401).json({ error: 'Blocked account' });
+
+      const validUserQuery = 'SELECT * FROM users WHERE email = ? AND password = ?';
+      db.get(validUserQuery, [email, password], (err2, validUserRow) => {
+        if (err2) return res.status(500).json({ error: 'Database error' });
+
+        if (!validUserRow) {
+          return res.status(401).json({ error: 'Incorrect password' });
+        }
+
+        return res.json({
+          name: validUserRow.first_name + ' ' + validUserRow.last_name,
+          role: 'user'
+        });
+      });
     });
   });
 });
