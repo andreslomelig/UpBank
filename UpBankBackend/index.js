@@ -66,7 +66,7 @@ app.post('/login', (req, res) => {
 });
 
 // Getting all users for admin
-app.get('/users', (req, res) => {
+app.get('/all_users', (req, res) => {
   const sql = `SELECT first_name, last_name, blocked FROM users`;
 
   db.all(sql, [], (err, rows) => {
