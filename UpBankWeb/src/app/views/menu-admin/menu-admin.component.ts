@@ -3,6 +3,7 @@ import { HeaderComponent } from "../../components/header/header.component";
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AllUsersService } from '../../services/all_users.service';
+import { UpdateBlockedStatusService } from '../../services/update_blocked_status.service'
 
 @Component({
   selector: 'app-menu-admin',
@@ -14,7 +15,7 @@ export class MenuAdminComponent implements OnInit {
   userName: string = '';
   users: any[] = [];
 
-  constructor(private allUsersService: AllUsersService) {}
+  constructor(private allUsersService: AllUsersService, private updateBlockedStatusService: UpdateBlockedStatusService) {}
 
   ngOnInit(): void {
     this.userName = localStorage.getItem('loggedInUser') ?? 'Guest';
@@ -28,4 +29,16 @@ export class MenuAdminComponent implements OnInit {
       }
     });
   }
+
+  toggleUserBlockedStatus(user: any) {
+    this.updateBlockedStatusService.updateUserBlockedStatus(user.email, !user.status).subscribe({
+      next: () => {
+        console.log(`User ${user.email} status updated`);
+      },
+      error: (err) => {
+        console.error('Failed to update user status', err);
+      }
+    });
+  }
+
 }

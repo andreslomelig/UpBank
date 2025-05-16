@@ -103,7 +103,7 @@ app.post('/login', (req, res) => {
           role: 'user'
         });
       } else {
-        // Incorrect password → increment login_attempts
+        // Incorrect password , increment user attempts
         let newAttempts = (userRow.login_attempts || 0) + 1;
         let blockUser = newAttempts >= 3;
 
@@ -128,7 +128,7 @@ app.post('/login', (req, res) => {
 
 // Getting all users for admin
 app.get('/all_users', (req, res) => {
-  const sql = `SELECT first_name, last_name, blocked FROM users`;
+  const sql = `SELECT first_name, last_name, blocked, email FROM users`;
 
   db.all(sql, [], (err, rows) => {
     if (err) {
@@ -137,12 +137,29 @@ app.get('/all_users', (req, res) => {
 
     const formattedUsers = rows.map(row => ({
       text: `${row.first_name} ${row.last_name}`,
-      status: !row.blocked // true = active, false = blocked
+      status: !row.blocked, // true = active, false = blocked
+      email: row.email
     }));
 
     res.json(formattedUsers);
   });
 });
+
+// Update the user blocked status
+app.post('/update_user_blocked_status', (req, res) => {
+  const { email, blocked } = req.body;
+
+  const sql = `UPDATE users SET blocked = ? WHERE email = ?`;
+  db.run(sql, [blocked ? 0 : 1, email], function (err) {
+    
+    if (err) {
+      return res.status(500).json({ error: 'Failed to update user status' });
+    }
+
+    res.json({ success: true, updatedRows: this.changes });
+  });
+});
+
 
 // Start server
 app.listen(PORT, () => {
