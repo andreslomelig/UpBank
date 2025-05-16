@@ -58,6 +58,9 @@ app.post('/login', (req, res) => {
   db.get(sql, [email, password], (err, row) => {
     if (err) return res.status(500).json({ error: 'Database error' });
     if (!row) return res.status(401).json({ error: 'Invalid credentials' });
+    if (row.blocked){ // if the account is blocked.
+      return res.status(401).json({ error: 'Blocked account' });
+    }
 
     res.json({
       name: row.first_name + ' ' + row.last_name
