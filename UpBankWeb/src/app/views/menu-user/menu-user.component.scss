@@ -122,6 +122,12 @@ $light-gold: #F5F0E6;
     font-family: "Lexend", sans-serif;
 }
 
+.table-row > div {
+    word-wrap: break-word;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
 .s1 {
     color: $gold;
 }
