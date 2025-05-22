@@ -66,7 +66,24 @@ const db = new sqlite3.Database('./db/upbank.db', (err) => {
                 else console.log('Dummy admin inserted or already exists.');
         });
     });
-  }
+
+    }
+    db.run(`CREATE TABLE IF NOT EXISTS transactions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sender_id INTEGER,
+    receiver_id INTEGER,
+    money REAL,
+    type TEXT CHECK(type IN ('Deposit', 'Transfer')),
+    status TEXT CHECK(status IN ('Error', 'Pending', 'Completed')),
+    description TEXT,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(sender_id) REFERENCES users(id),
+    FOREIGN KEY(receiver_id) REFERENCES users(id)
+  )`, (err) => {
+    if (err) console.error('Error creating transactions table:', err.message);
+    else console.log('Transactions table ensured.');
+  });
+
 });
 
 // Login route
@@ -160,6 +177,73 @@ app.post('/update_user_blocked_status', (req, res) => {
   });
 });
 
+// transfer module
+app.post('/transfer', (req, res) => {
+  const { from_account, to_account, amount, description } = req.body;
+
+  if (!from_account || !to_account || !amount || isNaN(amount)) {
+    console.error('Invalid transfer request.');
+    return res.status(400).json({ error: 'Invalid data' });
+  }
+
+  if (amount < 500 || amount > 10000) {
+    console.warn(`Rejected: Amount out of bounds: $${amount}`);
+    return res.status(400).json({ error: 'Amount must be between $500 and $10,000' });
+  }
+
+  db.serialize(() => {
+    db.get(`SELECT * FROM users WHERE account_number = ?`, [from_account], (err, sender) => {
+      if (err || !sender) return res.status(404).json({ error: 'Sender not found' });
+
+      db.get(`SELECT * FROM users WHERE account_number = ?`, [to_account], (err2, receiver) => {
+        if (err2 || !receiver) return res.status(404).json({ error: 'Receiver not found' });
+
+        if (sender.money < amount) return res.status(400).json({ error: 'Insufficient funds' });
+
+        db.get(`SELECT SUM(money) as totalReceived FROM transactions WHERE receiver_id = ? AND type = 'Transfer' AND status = 'Completed'`, [receiver.id], (err3, row) => {
+          if (err3) return res.status(500).json({ error: 'Error checking accumulated received' });
+
+          const totalReceived = row?.totalReceived || 0;
+          if (totalReceived + amount > 20000) {
+            return res.status(400).json({ error: 'Receiver exceeds $20,000 accumulated limit' });
+          }
+
+          const insertTransactionSQL = `
+            INSERT INTO transactions (sender_id, receiver_id, money, type, status, description)
+            VALUES (?, ?, ?, 'Transfer', 'Pending', ?)`;
+
+          db.run(insertTransactionSQL, [sender.id, receiver.id, amount, description || 'Transferencia entre cuentas'], function (err4) {
+            if (err4) return res.status(500).json({ error: 'Transaction log failed' });
+
+            const transactionId = this.lastID;
+
+            db.run('BEGIN TRANSACTION');
+            db.run(`UPDATE users SET money = money - ? WHERE id = ?`, [amount, sender.id], function (err5) {
+              if (err5) {
+                db.run(`UPDATE transactions SET status = 'Error' WHERE id = ?`, [transactionId]);
+                db.run('ROLLBACK');
+                return res.status(500).json({ error: 'Error debiting sender' });
+              }
+
+              db.run(`UPDATE users SET money = money + ? WHERE id = ?`, [amount, receiver.id], function (err6) {
+                if (err6) {
+                  db.run(`UPDATE transactions SET status = 'Error' WHERE id = ?`, [transactionId]);
+                  db.run('ROLLBACK');
+                  return res.status(500).json({ error: 'Error crediting receiver' });
+                }
+
+                db.run(`UPDATE transactions SET status = 'Completed' WHERE id = ?`, [transactionId]);
+                db.run('COMMIT');
+                console.log(`✅ Transfer $${amount} from ${from_account} to ${to_account} - Transaction #${transactionId}`);
+                return res.json({ success: true, transaction_id: transactionId, message: 'Transfer completed' });
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+});
 
 // Start server
 app.listen(PORT, () => {
