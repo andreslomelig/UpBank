@@ -57,4 +57,19 @@ export class InputComponent {
   togglePassword(): void {
     this.isPasswordVisible = !this.isPasswordVisible
   }
+
+  enforceTwoDecimals(event: Event) {
+  const input = event.target as HTMLInputElement;
+  let val = input.value;
+
+  if (/^\d*(\.\d{0,2})?$/.test(val)) {
+    this.value = val;
+    this.onChange(this.value);
+  } else {
+    input.value = this.value;
+  }
+}
+
+
+
 }
