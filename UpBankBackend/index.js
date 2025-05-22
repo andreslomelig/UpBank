@@ -97,6 +97,7 @@ app.post('/login', (req, res) => {
 
     if (adminRow) {
       return res.json({
+        id: adminRow.id,
         name: adminRow.first_name + ' ' + adminRow.last_name,
         role: 'admin'
       });
@@ -116,8 +117,9 @@ app.post('/login', (req, res) => {
         });
 
         return res.json({
-          name: userRow.first_name + ' ' + userRow.last_name,
-          role: 'user'
+        id: userRow.id,
+        name: userRow.first_name + ' ' + userRow.last_name,
+        role: 'user'
         });
       } else {
         // Incorrect password , increment user attempts
@@ -241,6 +243,21 @@ app.post('/transfer', (req, res) => {
           });
         });
       });
+    });
+  });
+});
+
+app.get('/user/:id', (req, res) => {
+  const userId = req.params.id;
+
+  db.get(`SELECT first_name, last_name, money, account_number FROM users WHERE id = ?`, [userId], (err, row) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+    if (!row) return res.status(404).json({ error: 'User not found' });
+
+    res.json({
+      name: row.first_name + ' ' + row.last_name,
+      money: row.money,
+      account_number: row.account_number
     });
   });
 });

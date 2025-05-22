@@ -27,7 +27,9 @@ export class LoginComponent {
       const password = this.form.value.strPassword!;
       this.loginService.login(email, password).subscribe({
         next: (res) => {
+          localStorage.clear();
           localStorage.setItem('loggedInUser', res.name);
+          localStorage.setItem('userId', res.id);
           Swal.fire({ title: 'Access Granted', icon: 'success' }).then(() => {
             if (res.role === 'admin') {
               this.router.navigate(['menu-admin']);
