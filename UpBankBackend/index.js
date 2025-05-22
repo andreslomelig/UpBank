@@ -177,7 +177,7 @@ app.post('/update_user_blocked_status', (req, res) => {
   });
 });
 
-// transfer module
+//Transfers
 app.post('/transfer', (req, res) => {
   const { from_account, to_account, amount, description } = req.body;
 
