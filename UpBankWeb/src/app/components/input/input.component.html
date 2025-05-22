@@ -19,3 +19,16 @@
         </div>
     </div>
 </div>
+
+<div *ngIf="type == 'number'" class="input-wrapper">
+  <label>{{label}}</label>
+  <div class="input-container with-symbol">
+    <span class="symbol">$</span>
+    <input type="text"
+           [value]="value"
+           (input)="enforceTwoDecimals($event)"
+           autocomplete="off"
+           autocorrect="off"
+           placeholder="{{placeholder}}">
+  </div>
+</div>

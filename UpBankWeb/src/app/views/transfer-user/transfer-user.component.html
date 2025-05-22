@@ -1,0 +1,61 @@
+<div class="menu-container">
+  <app-header 
+    [user]="'Kevin Escobedo'"
+    [amount]="'1000'"
+  ></app-header>
+
+  <div class="main-content">
+    <div class="left-bar">
+      <img class="corner-logo" src="assets/logoupR.png" alt="Up" />
+    </div>
+
+    <div class="form-container">
+      <div class="title-container">
+        <span class="s1">UP</span>
+        <span class="s2">Transactions</span>
+      </div>
+
+      <form [formGroup]="form" class="grid-form">
+        <app-input
+          [label]="'Origin'"
+          [type]="'text'"
+          formControlName="origin"
+        ></app-input>
+        <app-input
+          [label]="'Recipient'"
+          [type]="'text'"
+          formControlName="recipient"
+        ></app-input>
+        <app-input
+          [label]="'Amount'"
+          [type]="'number'"
+          formControlName="amount"
+        ></app-input>
+        <app-input
+          [label]="'Concept'"
+          [type]="'text'"
+          formControlName="concept"
+        ></app-input>
+
+        <div class="input-wrapper centered-input">
+        <label>Transaction Type</label>
+        <div class="input-container">
+          <select formControlName="transactionType">
+            <option value="" disabled selected>Select one</option>
+            <option value="Transfer">Transfer</option>
+            <option value="Deposit">Deposit</option>
+          </select>
+        </div>
+      </div>
+      </form>
+
+      <div class="button-container">
+        <app-button
+          [text]="'Transfer'"
+          [status]="form.valid ? 'active' : 'inactive'"
+          (action)="register()"
+        ></app-button>
+      </div>
+    </div>
+  </div>
+</div>
