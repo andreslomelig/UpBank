@@ -1,0 +1,44 @@
+<div class="menu-container">
+  <app-header [user]="user" [amount]="amount"></app-header>
+
+  <div class="main-content">
+    <div class="left-bar">
+        <img class="corner-logo" src="assets/logoupR.png" alt="Up" />
+    </div>
+    <div class="table-container">
+      <div class="title-container">
+            <div>
+                <span class="s1">UP</span>
+                <span class="s2">Transactions</span>
+            </div>
+            <div style="width: 300px;">
+                <app-button
+                    [text]="'Transfer'"
+                    [status]="+amount > 0 ? 'active' : 'inactive'"
+                />
+            </div>
+      </div>
+      <div class="table-row item-container">
+        <div class="s2" style="font-weight: bold;">Type</div>
+        <div class="s2" style="font-weight: bold;">Receiver</div>
+        <div class="s2" style="font-weight: bold;">Sender</div>
+        <div class="s2" style="font-weight: bold;">Amount</div>
+        <div class="s2" style="font-weight: bold;">Description</div>
+        <div class="s2" style="font-weight: bold;">Fecha</div>
+      </div>
+        <div class="list-container">
+            <div *ngFor="let t of transactions" class="table-row item-container">
+                <div class="item1">
+                    <div class="square"></div>
+                    <div>{{ t.type }}</div>
+                </div>
+                <div>{{ t.receiverID }}</div>
+                <div>{{ t.senderID }}</div>
+                <div>{{ t.amount }}</div>
+                <div>{{ t.description }}</div>
+                <div>{{ t.timestamp }}</div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
