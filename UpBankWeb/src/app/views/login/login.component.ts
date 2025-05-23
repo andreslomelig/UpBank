@@ -28,13 +28,13 @@ export class LoginComponent {
       this.loginService.login(email, password).subscribe({
         next: (res) => {
           localStorage.clear();
-          localStorage.setItem('loggedInUser', res.name);
-          localStorage.setItem('userId', res.id);
           Swal.fire({ title: 'Access Granted', icon: 'success' }).then(() => {
+            localStorage.setItem('loggedInUser', res.name);
             if (res.role === 'admin') {
               this.router.navigate(['menu-admin']);
             } else {
-              this.router.navigate(['menu-user']); //TODO: Create menu-user view.
+              localStorage.setItem('userId', res.id);
+              this.router.navigate(['menu-user']);
             }
           });
         },
