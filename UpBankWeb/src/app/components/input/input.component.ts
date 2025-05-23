@@ -21,6 +21,8 @@ export class InputComponent {
   @Input() icon: string = "";
   @Input() iconPassword = "";
   @Input() type: string = 'text';
+  @Input() disabled: boolean = false;
+
   
   isPasswordVisible: boolean = false;
   iconEye: string = 'assets/eye.svg';
@@ -52,6 +54,10 @@ export class InputComponent {
   handleInputChange(value: string) {
       this.value = value;
       this.onChange(this.value);
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+  this.disabled = isDisabled;
   }
 
   togglePassword(): void {

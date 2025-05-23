@@ -45,6 +45,7 @@ export class TransferUserComponent implements OnInit {
         this.user = user.name;
         this.balance = user.money;
         this.form.get('origin')?.setValue(user.account_number);
+        this.form.get('origin')?.disable();
       },
       error: () => {
         Swal.fire({
