@@ -35,7 +35,7 @@ const db = new sqlite3.Database('./db/upbank.db', (err) => {
             ['John', 'Doe', 'test@example.com', '123456', 1000.00, 0, '123456789012345678'], 
             (err) => {
                 if (err) console.error('Insert error:', err.message);
-                else console.log('Dummy user inserted or already exists.');
+                else console.log('Dummy user inserted or already exists.');              
         });
 
         db.run(`INSERT OR IGNORE INTO users 
@@ -81,7 +81,22 @@ const db = new sqlite3.Database('./db/upbank.db', (err) => {
     FOREIGN KEY(receiver_id) REFERENCES users(id)
   )`, (err) => {
     if (err) console.error('Error creating transactions table:', err.message);
-    else console.log('Transactions table ensured.');
+    else{
+      console.log('Transactions table ensured.');     
+      db.serialize(() => {
+        const insertDeposit = db.prepare(`
+          INSERT OR IGNORE INTO transactions
+          (sender_id, receiver_id, money, type, status, description, timestamp)
+          VALUES (NULL, ?, ?, 'Deposit', 'Completed', 'Depósito inicial', datetime('now'))
+        `);
+
+        insertDeposit.run(1, 1000.00);
+        insertDeposit.run(2, 1000.00);
+
+        insertDeposit.finalize();
+        console.log('Inicial deposit for users 1 y 2.');
+      });
+    } 
   });
 
 });
@@ -259,6 +274,29 @@ app.get('/user/:id', (req, res) => {
       money: row.money,
       account_number: row.account_number
     });
+  });
+});
+
+app.get('/transactions', (req, res) => {
+  const account = req.query.account;
+
+  if (!account) return res.status(400).json({ error: 'Account number required' });
+
+  const sql = `
+    SELECT DISTINCT t.id, t.money as amount, t.type, t.description, t.timestamp,
+          u1.account_number as senderID,
+          u2.account_number as receiverID
+    FROM transactions t
+    LEFT JOIN users u1 ON t.sender_id = u1.id
+    LEFT JOIN users u2 ON t.receiver_id = u2.id
+    WHERE u1.account_number = ? OR u2.account_number = ?
+    ORDER BY t.timestamp DESC
+  `;
+
+  db.all(sql, [account, account], (err, rows) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+
+    res.json(rows);
   });
 });
 
