@@ -50,7 +50,7 @@ export class TransferUserComponent implements OnInit {
       error: () => {
         Swal.fire({
           icon: 'error',
-          title: 'Error al cargar datos del usuario'
+          title: 'Error loadind user data'
         });
       }
     });
@@ -69,7 +69,7 @@ export class TransferUserComponent implements OnInit {
         Swal.fire({
           icon: 'error',
           title: 'Invalid Transfer',
-          text: 'Cannot sent to yourself',
+          text: 'Cannot send to yourself',
           confirmButtonColor: '#d33'
         });
         return;
@@ -105,7 +105,7 @@ export class TransferUserComponent implements OnInit {
 
       Swal.fire({
         icon: 'error',
-        title: 'Formulario incompleto',
+        title: 'Inclomplete Information',
         html: `<ul style="text-align: left;">${invalidFields.map(f => `<li>${f}</li>`).join('')}</ul>`,
         confirmButtonColor: '#d33'
       });

@@ -85,7 +85,7 @@ const db = new sqlite3.Database('./db/upbank.db', (err) => {
       } else {
         console.log('Transactions table ensured.');
 
-        // 👇 Solo si no hay ninguna transacción previa
+        //Only if the table is empty
         db.get(`SELECT COUNT(*) as count FROM transactions`, (err2, row) => {
           if (err2) {
             console.error('Error checking transactions count:', err2.message);
@@ -254,7 +254,7 @@ app.post('/transfer', (req, res) => {
 
                 db.run(`UPDATE transactions SET status = 'Completed' WHERE id = ?`, [transactionId]);
                 db.run('COMMIT');
-                console.log(`✅ Transfer $${amount} from ${from_account} to ${to_account} - Transaction #${transactionId}`);
+                console.log(`Transfer $${amount} from ${from_account} to ${to_account} - Transaction #${transactionId}`);
                 return res.json({ success: true, transaction_id: transactionId, message: 'Transfer completed' });
               });
             });
