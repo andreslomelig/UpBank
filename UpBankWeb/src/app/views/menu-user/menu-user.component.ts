@@ -5,6 +5,8 @@ import { HeaderComponent } from '../../components/header/header.component';
 import { ButtonComponent } from '../../components/button/button.component';
 import { TransferService } from '../../services/transfer.service';
 import { Transaction } from '../../models/transaction';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-menu-user',
@@ -19,20 +21,25 @@ export class MenuUserComponent {
   accountNumber: string = '';
   transactions: Transaction[] = [];
 
-  constructor(private http: HttpClient, private transferService: TransferService) {}
+constructor(
+  private http: HttpClient,
+  private transferService: TransferService,
+  private router: Router  
+) {}
+
 
   ngOnInit() {
     const userId = localStorage.getItem('userId');
     if (!userId) return;
 
-    // Paso 1: obtener nombre, saldo, y cuenta
     this.http.get<any>(`http://localhost:3000/user/${userId}`).subscribe({
       next: (userData) => {
         this.user = userData.name;
         this.amount = userData.money;
         this.accountNumber = userData.account_number;
 
-        // Paso 2: cargar historial de transacciones
+        localStorage.setItem('accountNumber', this.accountNumber);
+
         this.transferService.getTransactionsByUser(this.accountNumber).subscribe({
           next: (txs) => this.transactions = txs,
           error: () => console.error('Error al cargar transacciones')
@@ -40,5 +47,9 @@ export class MenuUserComponent {
       },
       error: () => console.error('Error al cargar datos del usuario')
     });
+  }
+
+  goToTransfer() {
+    this.router.navigate(['/transfer-user']);
   }
 }
