@@ -69,35 +69,38 @@ const db = new sqlite3.Database('./db/upbank.db', (err) => {
 
     }
     db.run(`CREATE TABLE IF NOT EXISTS transactions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    sender_id INTEGER,
-    receiver_id INTEGER,
-    money REAL,
-    type TEXT CHECK(type IN ('Deposit', 'Transfer')),
-    status TEXT CHECK(status IN ('Error', 'Pending', 'Completed')),
-    description TEXT,
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY(sender_id) REFERENCES users(id),
-    FOREIGN KEY(receiver_id) REFERENCES users(id)
-  )`, (err) => {
-    if (err) console.error('Error creating transactions table:', err.message);
-    else{
-      console.log('Transactions table ensured.');     
-      db.serialize(() => {
-        const insertDeposit = db.prepare(`
-          INSERT OR IGNORE INTO transactions
-          (sender_id, receiver_id, money, type, status, description, timestamp)
-          VALUES (NULL, ?, ?, 'Deposit', 'Completed', 'Depósito inicial', datetime('now'))
-        `);
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      sender_id INTEGER,
+      receiver_id INTEGER,
+      money REAL,
+      type TEXT CHECK(type IN ('Deposit', 'Transfer')),
+      status TEXT CHECK(status IN ('Error', 'Pending', 'Completed')),
+      description TEXT,
+      timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY(sender_id) REFERENCES users(id),
+      FOREIGN KEY(receiver_id) REFERENCES users(id)
+    )`, (err) => {
+      if (err) {
+        console.error('Error creating transactions table:', err.message);
+      } else {
+        console.log('Transactions table ensured.');
 
-        insertDeposit.run(1, 1000.00);
-        insertDeposit.run(2, 1000.00);
-
-        insertDeposit.finalize();
-        console.log('Inicial deposit for users 1 y 2.');
-      });
-    } 
-  });
+        // 👇 Solo si no hay ninguna transacción previa
+        db.get(`SELECT COUNT(*) as count FROM transactions`, (err2, row) => {
+          if (err2) {
+            console.error('Error checking transactions count:', err2.message);
+          } else if (row.count === 0) {
+            console.log('Inserting initial deposits for users 1 and 2...');
+            db.run(`INSERT INTO transactions (sender_id, receiver_id, money, type, status, description)
+                    VALUES (NULL, 1, 1000.00, 'Deposit', 'Completed', 'Depósito inicial')`);
+            db.run(`INSERT INTO transactions (sender_id, receiver_id, money, type, status, description)
+                    VALUES (NULL, 2, 1000.00, 'Deposit', 'Completed', 'Depósito inicial')`);
+          } else {
+            console.log('Transactions already exist. Skipping initial deposits.');
+          }
+        });
+      }
+    });
 
 });
 
