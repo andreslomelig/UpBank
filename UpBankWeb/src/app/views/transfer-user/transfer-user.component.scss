@@ -1,0 +1,132 @@
+$grey: #7d7d831a;
+$red: #79332f;
+$gold: #c8a977;
+$blue: #002d75;
+$white: #ffffff;
+$light-gold: #F5F0E6;
+
+.menu-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    background-color: $red;
+}
+
+.left-bar {
+    width: 170px;
+    background-color: $gold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.corner-logo {
+    width: 160px;
+    height: auto;
+}
+
+.form-container {
+  border: 1px solid $gold;
+  background-color: $light-gold;
+  border-radius: 20px;
+  padding: 35px 60px;
+  margin: 100px 400px;
+  display: flex; 
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+
+  span {
+    font-family: "Lexend", sans-serif;
+    font-size: 50px;
+    font-weight: bold;
+  }
+
+  form {
+    width: 100%;
+  }
+}
+
+.title-container {
+    width: 100%;
+    border: 1px solid $gold;
+    border-radius: 10px;
+    border-width: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.s1 {
+    color: $gold;
+}
+
+.s2 {
+    color: $red;
+}
+
+.button-container {
+    width: 100%;
+}
+
+.grid-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 40px;
+  width: 100%;
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-family: "Lexend", sans-serif;
+  color: $gold;
+  width: 100%;
+
+  .input-container {
+    border: 2px solid $gold;
+    border-radius: 10px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    background-color: transparent;
+
+    select {
+      flex-grow: 1;
+      border: none;
+      outline: none;
+      background-color: transparent;
+      font-family: "Lexend", sans-serif;
+      font-size: 16px;
+      color: $red;
+      height: 100%;
+      padding: 0 5px;
+      appearance: none; /* quita estilos nativos */
+      -webkit-appearance: none;
+      -moz-appearance: none;
+    }
+  }
+}
+
+.grid-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 40px;
+  width: 100%;
+  justify-items: center; 
+}
+
+.centered-input {
+  grid-column: 1 / span 2; 
+  width: 250px; 
+}
+
