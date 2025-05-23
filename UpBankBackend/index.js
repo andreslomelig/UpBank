@@ -41,7 +41,7 @@ const db = new sqlite3.Database('./db/upbank.db', (err) => {
         db.run(`INSERT OR IGNORE INTO users 
             (first_name, last_name, email, password, money, blocked, account_number) 
             VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            ['Chuck', 'Norris', 'chuck@example.com', '4321', 1000.00, 1, '123456789012345688'], 
+            ['Chuck', 'Norris', 'chuck@example.com', '4321', 1000.00, 0, '123456789012345688'], 
             (err) => {
                 if (err) console.error('Insert error:', err.message);
                 else console.log('Dummy user inserted or already exists.');
