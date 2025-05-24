@@ -4,6 +4,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { ButtonComponent } from '../../components/button/button.component';
 import { InputComponent } from '../../components/input/input.component';
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -14,6 +15,9 @@ import Swal from 'sweetalert2';
 })
 
 export class TransferUserComponent {
+
+  constructor(private router: Router) {}
+
   form = new FormGroup({
     origin: new FormControl('', Validators.required),
     recipient: new FormControl('', Validators.required),
@@ -67,6 +71,10 @@ export class TransferUserComponent {
     });
   }
 }
+
+goBackToUserTable() {
+    this.router.navigate(['menu-user']); 
+  }
 
 }
 
