@@ -10,22 +10,28 @@
           <span class="s1">UP</span>
           <span class="s2">Users</span>
       </div>
-      <div *ngFor="let user of users" class="table-row item-container">
-        <div class="name">
-          <div class="square"></div>
-          {{ user.text }}
-        </div>
-         <div class="toggle-switch">
-          <label class="switch">
-            <input
-              type="checkbox"
-              [checked]="user.status"
-              (change)="toggleUserBlockedStatus(user)"
-            />
-            <span class="slider round"></span>
-          </label>
+      <div class="list-container">
+        <div *ngFor="let user of users" class="table-row item-container">
+          <div class="name">
+            <div class="square"></div>
+            {{ user.text }}
+          </div>
+          <div class="toggle-switch">
+            <label class="switch">
+              <input type="checkbox" [(ngModel)]="user.status">
+              <span class="slider round"></span>
+            </label>
+          </div>
         </div>
       </div>
+    </div>
+    <div class="logout">
+      <app-button
+        [text]="'Logout'"
+        (action)="logOut()"
+        [status]="'active'"
+        [icon]="'logout'"
+      />
     </div>
   </div>
 </div>

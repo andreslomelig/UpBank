@@ -5,8 +5,8 @@ import { HeaderComponent } from '../../components/header/header.component';
 import { ButtonComponent } from '../../components/button/button.component';
 import { TransferService } from '../../services/transfer.service';
 import { Transaction } from '../../models/transaction';
+import { ButtonComponent } from "../../components/button/button.component";
 import { Router } from '@angular/router';
-
 
 @Component({
   selector: 'app-menu-user',
@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
   templateUrl: './menu-user.component.html',
   styleUrl: './menu-user.component.scss'
 })
-export class MenuUserComponent {
+export class MenuUserComponent {  
   user: string = '';
   amount: number = 0;
   accountNumber: string = '';
@@ -51,5 +51,9 @@ constructor(
 
   goToTransfer() {
     this.router.navigate(['/transfer-user']);
+  }
+  
+  logOut() {
+    this.router.navigate(['login'])
   }
 }

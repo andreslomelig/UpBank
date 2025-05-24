@@ -1,4 +1,4 @@
-<button type="button" [ngClass]="[type, status]" (click)="emitAction()" [disabled]="status === 'inactive'">
+<button type="button" [ngClass]="[type, status, color]" (click)="emitAction()" [disabled]="status === 'inactive'">
     @if(icon.trim()!= ""){
         <div class="icon">
             @switch (icon) {
@@ -7,6 +7,9 @@
                 }
                 @case ('delete') {
                     <img src="assets/eyeOff.svg" alt="add-icon">
+                }
+                @case ('logout') {
+                    <img src="assets/logout.png" alt="add-icon">
                 }
             }
         </div>
