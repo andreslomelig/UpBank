@@ -2,12 +2,12 @@
     <div class="title-container">
         <span class="s1">UP</span><span class="s2">Bank</span>
     </div>
-    <div class="user-container" *ngIf="user !== ''">
+    <div class="user-container"  *ngIf="user !== ''">
         <span class="s1 t1">User</span>
         <span class="s2">{{ user }}</span>
     </div>
 
-    <div class="balance-container" *ngIf="amount !== ''">
+    <div class="balance-container" *ngIf="amount > 0">
         <span class="s1 t1">Balance</span>
         <div style="gap: 15px; display: flex;">
             <span class="s2">$</span>

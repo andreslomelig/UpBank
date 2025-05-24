@@ -12,10 +12,11 @@
                 <span class="s2">Transactions</span>
             </div>
             <div style="width: 300px;">
-                <app-button
-                    [text]="'Transfer'"
-                    [status]="+amount > 0 ? 'active' : 'inactive'"
-                />
+              <app-button
+                [text]="'Transfer'"
+                [status]="amount > 0 ? 'active' : 'inactive'"
+                (action)="goToTransfer()"
+              />
             </div>
       </div>
       <div class="table-row item-container">

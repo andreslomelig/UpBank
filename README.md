@@ -34,6 +34,33 @@ cd UpBank
 
 ## Development server
 
+### Backend
+
+First you will need to setup the backend, run:
+
+```bash
+cd UpBankBackend # Go to the backend folder
+npm init -y
+npm install express cors sqlite3 body-parser
+```
+
+To run the backend development server, type:
+```bash
+cd UpBankBackend # Go to the backend folder
+node index.js
+```
+
+Once the server is running, notice it will be hosted in `http://localhost:3000/`.  There is no need for you to open it in your browser, it is just for you to know the port of the backend server.
+
+### Frontend
+
+First you will need to setup the frontend, run:
+
+```bash
+cd UpBankWeb # Go to the frontend folder
+npm install
+```
+
 To start a local development server, run:
 
 ```bash
@@ -41,6 +68,8 @@ ng serve
 ```
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+
+NOTE: Make sure you are running the backend simultaneously !!
 
 ## Code scaffolding
 

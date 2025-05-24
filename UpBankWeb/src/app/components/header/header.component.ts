@@ -9,5 +9,5 @@ import { Component, Input } from '@angular/core';
 })
 export class HeaderComponent {
   @Input() user: string = ''
-  @Input() amount: string = ''
+  @Input() amount: number = 0;
 }

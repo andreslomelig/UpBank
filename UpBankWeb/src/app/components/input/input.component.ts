@@ -21,6 +21,8 @@ export class InputComponent {
   @Input() icon: string = "";
   @Input() iconPassword = "";
   @Input() type: string = 'text';
+  @Input() disabled: boolean = false;
+
   
   isPasswordVisible: boolean = false;
   iconEye: string = 'assets/eye.svg';
@@ -54,7 +56,26 @@ export class InputComponent {
       this.onChange(this.value);
   }
 
+  setDisabledState(isDisabled: boolean): void {
+  this.disabled = isDisabled;
+  }
+
   togglePassword(): void {
     this.isPasswordVisible = !this.isPasswordVisible
   }
+
+  enforceTwoDecimals(event: Event) {
+  const input = event.target as HTMLInputElement;
+  let val = input.value;
+
+  if (/^\d*(\.\d{0,2})?$/.test(val)) {
+    this.value = val;
+    this.onChange(this.value);
+  } else {
+    input.value = this.value;
+  }
+}
+
+
+
 }
