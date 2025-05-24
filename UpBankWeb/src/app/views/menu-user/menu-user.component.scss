@@ -80,6 +80,13 @@ $light-gold: #F5F0E6;
     gap: 10px;
 }
 
+.logout {
+    display: flex;
+    align-items: flex-end;
+    padding-right: 20px;
+    padding-bottom: 20px;
+}
+
 .list-container {
     display: flex;
     flex-direction: column;

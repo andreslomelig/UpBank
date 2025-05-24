@@ -3,6 +3,7 @@ import { HeaderComponent } from '../../components/header/header.component';
 import { CommonModule } from '@angular/common';
 import { Transaction } from '../../models/transaction';
 import { ButtonComponent } from "../../components/button/button.component";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-menu-user',
@@ -11,10 +12,48 @@ import { ButtonComponent } from "../../components/button/button.component";
   styleUrl: './menu-user.component.scss'
 })
 export class MenuUserComponent {
+  constructor(private router: Router){}
+
   amount: string = "200"
   user: string = "Rene Pérez"
   transactions: Transaction[] = [
     {
+    ID: "TXN001",
+    senderID: "USR123",
+    receiverID: "USR456",
+    amount: "150.00",
+    type: "Transferencia",
+    description: "Pago por servicios",
+    timestamp: "2025-05-16T10:30:00Z"
+  },
+  {
+    ID: "TXN001",
+    senderID: "USR123",
+    receiverID: "USR456",
+    amount: "150.00",
+    type: "Transferencia",
+    description: "Pago por servicios",
+    timestamp: "2025-05-16T10:30:00Z"
+  },
+  {
+    ID: "TXN001",
+    senderID: "USR123",
+    receiverID: "USR456",
+    amount: "150.00",
+    type: "Transferencia",
+    description: "Pago por servicios",
+    timestamp: "2025-05-16T10:30:00Z"
+  },
+  {
+    ID: "TXN001",
+    senderID: "USR123",
+    receiverID: "USR456",
+    amount: "150.00",
+    type: "Transferencia",
+    description: "Pago por servicios",
+    timestamp: "2025-05-16T10:30:00Z"
+  },
+  {
     ID: "TXN001",
     senderID: "USR123",
     receiverID: "USR456",
@@ -70,4 +109,8 @@ export class MenuUserComponent {
   }
 
   ]
+
+  logOut() {
+    this.router.navigate(['login'])
+  }
 }
