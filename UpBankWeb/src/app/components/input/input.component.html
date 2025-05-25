@@ -6,7 +6,7 @@
             <img src="{{icon}}" alt="icon">
         </div>
         }
-        <input required="" [(ngModel)]="value" autocomplete="off" autocorrect="off" placeholder="{{placeholder}}" type="text" (ngModelChange)="handleInputChange($event)">
+        <input required="" [(ngModel)]="value" autocomplete="off" autocorrect="off" placeholder="{{placeholder}}" type="text" (ngModelChange)="handleInputChange($event)" [disabled]="disabled">
     </div>
 </div>
 
@@ -20,15 +20,20 @@
     </div>
 </div>
 
-<div *ngIf="type == 'number'" class="input-wrapper">
-  <label>{{label}}</label>
+<div *ngIf="type === 'number'" class="input-wrapper">
+  <label>{{ label }}</label>
   <div class="input-container with-symbol">
     <span class="symbol">$</span>
-    <input type="text"
-           [value]="value"
-           (input)="enforceTwoDecimals($event)"
-           autocomplete="off"
-           autocorrect="off"
-           placeholder="{{placeholder}}">
+    <input
+    type="text"
+    [value]="value"
+    (input)="enforceTwoDecimals($event)"
+    autocomplete="off"
+    autocorrect="off"
+    [placeholder]="placeholder"
+    [disabled]="disabled"
+    />
+
   </div>
 </div>
+

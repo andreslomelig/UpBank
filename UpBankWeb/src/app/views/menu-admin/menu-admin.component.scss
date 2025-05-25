@@ -33,7 +33,7 @@ $light-gold: #F5F0E6;
 .table-container {
     flex: 1;   
     padding: 10px;
-    margin: 40px 400px;
+    margin: 40px 300px;
     background-color: $light-gold;
     border: 2px solid $gold;
     border-radius: 20px;
@@ -41,6 +41,41 @@ $light-gold: #F5F0E6;
     flex-direction: column;
     gap: 10px;
     padding: 35px 60px;
+}
+
+.logout {
+    display: flex;
+    align-items: flex-end;
+    padding-right: 20px;
+    padding-bottom: 20px;
+}
+
+.list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: 340px;
+    padding-right: 15px;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $light-gold;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $gold;
+    border-radius: 10px;
+    border: 2px solid $light-gold
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: $gold;
+  }
 }
 
 .square {
