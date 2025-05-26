@@ -5,7 +5,6 @@ import { HeaderComponent } from '../../components/header/header.component';
 import { ButtonComponent } from '../../components/button/button.component';
 import { TransferService } from '../../services/transfer.service';
 import { Transaction } from '../../models/transaction';
-import { ButtonComponent } from "../../components/button/button.component";
 import { Router } from '@angular/router';
 
 @Component({
