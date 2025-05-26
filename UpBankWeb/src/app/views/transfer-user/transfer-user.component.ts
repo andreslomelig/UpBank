@@ -111,4 +111,10 @@ export class TransferUserComponent implements OnInit {
       });
     }
   }
+
+goBackToUserTable() {
+    this.router.navigate(['menu-user']); 
+  }
+
 }
+
