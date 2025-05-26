@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AllUsersService } from '../../services/all_users.service';
 import { UpdateBlockedStatusService } from '../../services/update_blocked_status.service'
+import { ButtonComponent } from '../../components/button/button.component';
 
 @Component({
   selector: 'app-menu-admin',
@@ -17,7 +18,7 @@ export class MenuAdminComponent implements OnInit {
   userName: string = '';
   users: any[] = [];
 
-  constructor(private allUsersService: AllUsersService, private updateBlockedStatusService: UpdateBlockedStatusService) {}
+  constructor(private router: Router, private allUsersService: AllUsersService, private updateBlockedStatusService: UpdateBlockedStatusService) {}
 
   ngOnInit(): void {
     this.userName = localStorage.getItem('loggedInUser') ?? 'Guest';
