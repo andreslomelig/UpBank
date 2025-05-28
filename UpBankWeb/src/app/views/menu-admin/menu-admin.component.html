@@ -18,7 +18,11 @@
           </div>
           <div class="toggle-switch">
             <label class="switch">
-              <input type="checkbox" [(ngModel)]="user.status">
+              <input
+                type="checkbox"
+                [checked]="user.status"
+                (change)="toggleUserBlockedStatus(user)"
+              />
               <span class="slider round"></span>
             </label>
           </div>

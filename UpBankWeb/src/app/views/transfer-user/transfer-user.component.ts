@@ -50,7 +50,7 @@ export class TransferUserComponent implements OnInit {
       error: () => {
         Swal.fire({
           icon: 'error',
-          title: 'Error loadind user data'
+          title: 'Error loading user data'
         });
       }
     });
@@ -112,7 +112,7 @@ export class TransferUserComponent implements OnInit {
     }
   }
 
-goBackToUserTable() {
+  goBackToUserTable() {
     this.router.navigate(['menu-user']); 
   }
 
