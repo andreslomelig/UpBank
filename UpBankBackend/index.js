@@ -191,8 +191,6 @@ app.post('/update_user_blocked_status', (req, res) => {
     if (err) {
       return res.status(500).json({ error: 'Failed to update user status' });
     }
-    console.log("Successfully toggled");
-    console.log(`Rows updated: ${this.changes}`);
     res.json({ success: true, updatedRows: this.changes });
   });
 });
