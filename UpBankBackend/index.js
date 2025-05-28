@@ -135,9 +135,9 @@ app.post('/login', (req, res) => {
         });
 
         return res.json({
-        id: userRow.id,
-        name: userRow.first_name + ' ' + userRow.last_name,
-        role: 'user'
+          id: userRow.id,
+          name: userRow.first_name + ' ' + userRow.last_name,
+          role: 'user'
         });
       } else {
         // Incorrect password , increment user attempts
@@ -184,15 +184,15 @@ app.get('/all_users', (req, res) => {
 
 // Update the user blocked status
 app.post('/update_user_blocked_status', (req, res) => {
-  const { email, blocked } = req.body;
+    const { email, blocked } = req.body;
+    const sql = `UPDATE users SET blocked = ? WHERE email = ?`;
+    db.run(sql, [blocked ? 0 : 1, email], function (err) {
 
-  const sql = `UPDATE users SET blocked = ? WHERE email = ?`;
-  db.run(sql, [blocked ? 0 : 1, email], function (err) {
-    
     if (err) {
       return res.status(500).json({ error: 'Failed to update user status' });
     }
-
+    console.log("Successfully toggled");
+    console.log(`Rows updated: ${this.changes}`);
     res.json({ success: true, updatedRows: this.changes });
   });
 });
